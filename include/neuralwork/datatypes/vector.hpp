@@ -1,52 +1,119 @@
 #ifndef NEURALWORK_VECTOR
 #define NEURALWORK_VECTOR
-#include <vector>
 
-namespace neuralwork {
-// write a vector struct that internally uses std::vector
-template<typename T>
+#include <vector>
+#include <iostream>
+
+
+namespace neuralwork{
+    
+template<typename T> // T may be one of the following: float, double
 struct vector {
 private:
-    std::vector<T> _vector;
-public:
-    // default constructor
-    vector() {
-        this->_vector = std::vector<T>(1,0);
-    };
-    // constructor with default value and size
-    vector(T default_value, int size) {
-        this->_vector = std::vector<T>(size, default_value);
-    }
-    // constructor with std::vector
-    vector(std::vector<T> _vector) {
-        this->_vector = _vector;
-    }
-    // constructor with array of T
-    vector(T* arr, int size) {
-        for (int i = 0; i < size; i++) {
-            this->_vector.push_back(arr[i]);
+    std::vector<T> _v;
+    int _size;
+    void _equalSizeCheck(vector<T> &v) {
+        if (!this->isEqualSize(v)) {
+            throw std::invalid_argument("Vectors are of unequal size");
         }
     }
-    // dot product
-    T dot(vector<T> other) {
+
+public:
+    // defining the constructor
+    vector(const T arr[], const int &length) {
+        this->_size = length;
+        this->_v = std::vector<T>(length);
+        for (int i = 0; i < length; i++) {
+            this->_v[i] = arr[i];
+        }
+    }
+
+    // vec(vec<T> &v){
+    //     this->_v = std::vector<T>(v.getVector());
+    //     this->_size = v.getSize();
+    // }
+
+    vector(std::vector<T> &v) {
+        this->_v = std::vector<T>(v);
+        this->_size = v.getSize();
+    }
+
+    vector(const int &size) {
+        this->_size = size;
+        this->_v = std::vector<T>(size);
+    }
+
+    // defining the getter
+    vector<T> getVec() const {
+        return this->_v;
+    }
+
+    int getSize() {
+        return this->_size;
+    }
+
+    // defining the setter
+    void setAt(const int &index, const T &value) {
+        this->_v[index] = value;
+    }
+
+    void setVector(vector<T> &v) {
+        this->_v = v;
+    }
+
+    // defining the operator overloading
+    void operator=(vector<T> &v) {
+        this->_v = std::vector<T>(v.getVector());
+        this->_size = v.getSize();
+    }
+
+    T operator[](const int &index) { // works only as a getter
+        return this->_v[index];
+    }
+
+    vector<T> operator+(vector<T> &v) { // adding two vectors
+        this->_equalSizeCheck(v);
+        vector<T> result(this->_size);
+        for (int i = 0; i < this->_size; i++) {
+            result.setAt(i, this->_v[i] + v[i]);
+        }
+        return result;
+    }
+
+    T operator*(vector<T> &v) { // dot product
+        this->_equalSizeCheck(v);
         T sum = 0;
-        for (int i = 0; i < this->_vector.size(); i++) {
-            sum += this->_vector[i] * other._vector[i];
+        for (int i = 0; i < this->_size; i++) {
+            sum += v[i] * (*this)[i];
         }
         return sum;
     }
 
-    // getter
-    std::vector<T> get() {
-        return this->_vector;
-    }
-    // overload [] operator
-    T& operator[](int index) {
-        return this->_vector[index];
+    vector<T> operator*(const T &scalar) { // scalar multiplication
+        vector<T> result(this->_size);
+        for (int i = 0; i < this->_size; i++) {
+            result.setAt(i, this->_v[i] * scalar);
+        }
+        return result;
     }
 
+    // defining other methods
+    void randomize() {
+        for (int i = 0; i < this->_size; i++) {
+            this->_v[i] = ((float) rand() / (RAND_MAX));
+        }
+    }
+    bool isEqualSize(vector<T> &v) {
+        return this->_size == v.getSize();
+    }
 
+    void print() {
+        for (int i = 0; i < this->_size; i++) {
+            std::cout<<this->_v[i]<<" ";
+        }
+        std::cout<<std::endl;
+    }
 };
 }
 
-#endif // 
+#endif
