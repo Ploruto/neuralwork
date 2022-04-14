@@ -25,16 +25,6 @@ public:
             this->_matrix.push_back(vector<T>(arr + i * cols, cols));
         }
     }
-    // dot product
-    matrix<T> dot(matrix<T> other) {
-        matrix<T> result(this->_matrix.size(), other._matrix[0].size());
-        for (int i = 0; i < this->_matrix.size(); i++) {
-            for (int j = 0; j < other._matrix[0].size(); j++) {
-                result._matrix[i][j] = this->_matrix[i].dot(other._matrix[j]);
-            }
-        }
-        return result;
-    }
     // getter
     std::vector<vector<T>> get() {
         return this->_matrix;
