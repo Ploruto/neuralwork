@@ -9,4 +9,5 @@ CMakeCache.txt
 Makefile
 .vscode/
 CTestTestfile.cmake
-test/neuralworkTests
+tests/neuralworkTests
+*.orig

@@ -5,7 +5,7 @@ project (neuralwork)
 
 # Create a sources variable with a link to all cpp files to compile
 file(GLOB SOURCES true 
-  datatypes/vectorTest.cpp
+  datatypes/vectorTest.cpp datatypes/matrixTest.cpp
 
 )
 
