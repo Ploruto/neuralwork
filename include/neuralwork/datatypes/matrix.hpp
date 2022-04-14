@@ -45,7 +45,7 @@ struct matrix{
         this->_cols = cols;
         this->_m = std::vector<vector<T>>(rows);
         for (int i = 0; i < rows; i++){
-            this->_m[i] = vector<T>(cols);
+            this->_m.setRow(i, vector<T>(cols));
         }
     }
 
@@ -66,6 +66,11 @@ struct matrix{
     void setAt(const int &row, const int &col, const T &value){
         this->_m[row][col] = value;
     }
+
+    void setRow(const int &row, vector<T> &v){
+        this->_m[row] = v;
+    }
+
 
     // defining the operator overloading
     void operator=(matrix<T> &m){

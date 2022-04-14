@@ -6,7 +6,6 @@
 
 
 namespace neuralwork{
-    
 template<typename T> // T may be one of the following: float, double
 struct vector {
 private:
@@ -98,11 +97,17 @@ public:
     }
 
     // defining other methods
+    void push_back(T el) {
+        this->_v.push_back(el);
+        (this->_size)++;
+    }
+
     void randomize() {
         for (int i = 0; i < this->_size; i++) {
             this->_v[i] = ((float) rand() / (RAND_MAX));
         }
     }
+
     bool isEqualSize(vector<T> &v) {
         return this->_size == v.getSize();
     }

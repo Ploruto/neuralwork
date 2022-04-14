@@ -111,7 +111,7 @@ public:
     void calculateDerivativeOfZValues(vector<T> &input = nullptr, bool isLastLayer = false) {
         // this function already handles the influence of sigmoid
         // this function must be called before adjusting weights and biases
-        const vector<T> ZValuesThisLayer = sigmoidReversedVector(this->nodes);
+        const vector<T> ZValuesThisLayer = sigmoidReversedVector(this->_nodes);
         if (isLastLayer) { // when this is the last layer the derivatives of the nodes are simply: 2 * (y - node); since we actually want the derivative of Z, we multiply further with 'sigmoid(node)
             for (int i = 0; i < this->_derivativeofZValues.getSize(); i++) {
                 this->_derivativeofZValues.setAt(i, 2 * (input[i] - this->_nodes[i]) * sigmoidDerivative(Z[i]));
@@ -139,7 +139,7 @@ public:
     vector<T> calculateDerivativeOfBiases() {
         for (int i = 0; i < this->_weights.getSize(); i++) {
             for (int j = 0; j < this->_weights[i].getSize(); j++) {
-                this->_derivativeofWeights.setAt(i, j, alpha * this->_derivativeofZValues[i]);
+                this->_derivativeofWeights.setAt(i, j, this->_derivativeofZValues[i]);
             }
         }
         return this->_derivativeofWeights;
