@@ -12,8 +12,6 @@ file(GLOB SOURCES true
 add_library(neuralworkLib ${SOURCES})
 
 
-
-
 #google tests
 include(FetchContent)
 FetchContent_Declare(

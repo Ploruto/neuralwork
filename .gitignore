@@ -1,0 +1,12 @@
+_deps/
+.cache/
+bin/
+build/
+CMakeFiles/
+lib/
+cmake_install.cmake
+CMakeCache.txt
+Makefile
+.vscode/
+CTestTestfile.cmake
+test/neuralworkTests
