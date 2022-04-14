@@ -10,6 +10,7 @@ namespace neuralwork {
     {
         private:
             vector<neuron> _neurons;
+            matrix<double> _weights;
 
     };
     
