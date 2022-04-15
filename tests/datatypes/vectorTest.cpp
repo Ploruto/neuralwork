@@ -9,3 +9,10 @@ TEST(vectorTest, equalSizeCheck) {
 
     EXPECT_EQ(v1[0], 0);
 }
+
+TEST(vectorTest, randomize) {
+    vector<float> v1(2);
+    v1.randomize();
+    v1.print();
+    
+}

@@ -39,4 +39,3 @@ vector<float> getReversedValue(vector<float> values) {
     }
     return result;
 }
-

@@ -14,43 +14,34 @@ public:
         this->_matrix = vector<vector<T>>();
     }
 
-    // constructor with size of matrix (cols, rows)
-    matrix(int cols, int rows) {
-        this->_matrix = vector<vector<T>>(cols, vector<T>(rows));
+    // constructor with size of matrix (rows, cols)
+    matrix(int rows, int cols){
+        this->_matrix = vector<vector<T>>(rows, vector<T>(cols, (T) 0.0f));
+    }
+        
+
+    // constructor with size of matrix (rows, cols) and value
+    matrix(int rows, int cols, T value) {
+        this->_matrix = vector<vector<T>>(rows, vector<T>(cols, value));
     }
 
-    // constructor with size of matrix (cols, rows) and value
-    matrix(int cols, int rows, T value) {
-        this->_matrix = vector<vector<T>>(cols, vector<T>(rows, value));
+    // constructor with size of matrix (rows, cols) and values
+    matrix(int rows, int cols, T *values) {
+        this->_matrix = vector<vector<T>>(rows, vector<T>(cols, values));
     }
 
-    // constructor with size of matrix (cols, rows) and values
-    matrix(int cols, int rows, T *values) {
-        this->_matrix = vector<vector<T>>(cols, vector<T>(rows, values));
-    }
-
-    T &operator()(int col, int row) {
-        return this->_matrix[col][row];
-    }
 
     vector<T> &operator[](int index) {
         return this->_matrix[index];
     }
 
-    void set(int col, int row, T value) {
-        this->_matrix[col][row] = value;
+    int getRows() {
+        return this->_matrix.size();
     }
 
-    void set_col(int col, vector<T> values) {
-        this->_matrix[col] = values;
+    int getCols() {
+        return this->_matrix[0].size();
     }
-
-    // get size of matrix by multiplying the size of the outer and inner vector
-    int size() {
-        return this->_matrix.size() * this->_matrix[0].size();
-    }
-
-
 
     // scalar multiplication
     matrix<T> operator*(T scalar) {
@@ -75,7 +66,45 @@ public:
         return result;
     }
 
+    void randomize() {
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            // call randomize on each vector in the matrix
+            this->_matrix[i].randomize();
+        }
+    }
 
+    void print() {
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            for (int j = 0; j < this->_matrix[0].size(); j++) {
+                std::cout << this->_matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+    }
+
+    void operator=(matrix<T> &matrix) {
+        this->_matrix = matrix._matrix;
+    }
+
+    void operator=(matrix<T> &&matrix) {
+        this->_matrix = matrix._matrix;
+    }
+
+    void add(matrix<T> &matrix) {
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            for (int j = 0; j < this->_matrix[0].size(); j++) {
+                this->_matrix[i][j] += matrix._matrix[i][j];
+            }
+        }
+    }
+
+    void add(T scalar) {
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            for (int j = 0; j < this->_matrix[0].size(); j++) {
+                this->_matrix[i][j] += scalar;
+            }
+        }
+    }
 
 };
 

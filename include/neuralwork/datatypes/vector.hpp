@@ -7,7 +7,7 @@ namespace neuralwork {
 template <typename T>
 struct vector
 {
-    private:
+    public:
         std::vector<T> _vector;
 
     public:
@@ -58,9 +58,26 @@ struct vector
             return this->_vector[index];
         }
 
-        void setAt(int index, T value)
+        void randomize()
         {
-            this->_vector[index] = value;
+            for (int i = 0; i < this->_vector.size(); i++)
+            {
+                this->_vector[i] = (float)rand() / (float)RAND_MAX;
+            }
+        }
+
+        int size()
+        {
+            return this->_vector.size();
+        }  
+        
+        void print()
+        {
+            for (int i = 0; i < this->_vector.size(); i++)
+            {
+                std::cout << this->_vector[i] << " ";
+            }
+            std::cout << std::endl;
         }
 };
 }
