@@ -1,7 +1,7 @@
 #ifndef NEURALWORK_NEURALNETWORK
 #define NEURALWORK_NEURALNETWORK
 
-#include <./include/neuralwork/datatypes/matrix.hpp>
+#include <neuralwork/datatypes/matrix.hpp>
 #include <neuralwork/datatypes/neuralLayer.hpp>
 #include <neuralwork/datatypes/vector.hpp>
 
@@ -13,22 +13,26 @@ struct neuralNetwork
 private:
     std::vector<neuralLayer<T>> _layers;
     int _noLayers;
-    matrix<matrix<T>> _matrixOfLayersAndDerivativesOfWeights; // derivativeMatrix = x[layer][trainingIndex]
-    matrix<vector<T>> _matrixOfLayersAndDerivativesOfBiases;
+    matrix<matrix<T>> _matrixOfLayersAndDerivativesOfWeights(); // derivativeMatrix = x[layer][trainingIndex]
+    matrix<vector<T>> _matrixOfLayersAndDerivativesOfBiases();
     float _learningRate;
 
 public:
-    neuralNetwork(vector<int> numberOfNodesInEveryLayer, float _learningRate = 0.01)
-    {
+    neuralNetwork(vector<int> numberOfNodesInEveryLayer, float _learningRate = 0.01) {
         // initializing variables
-        this->_noLayers = numberOfNodesInEveryLayer.getSize();
-        this->_layers = std::vector<neuralLayer<T>>({neuralLayer<T>(numberOfNodesInEveryLayer[0], 0)});
-        this->_matrixOfLayersAndDerivativesOfWeights = matrix<matrix<T>>(this->_noLayers, 0);
-        this->_matrixOfLayersAndDerivativesOfBiases = matrix<vector<T>>(this->_noLayers, 0);
+        return;
+        // this->_noLayers = numberOfNodesInEveryLayer.getSize();
+        // neuralLayer<T> firstLayer(numberOfNodesInEveryLayer[0], 0);
+        // this->_layers.push_back(firstLayer);
+        // matrix<matrix<T>> initWeights(this->_noLayers, 0);
+        // this->_matrixOfLayersAndDerivativesOfWeights = initWeights;
+        // matrix<vector<T>> initBiases(this->_noLayers, 0);
+        // this->_matrixOfLayersAndDerivativesOfBiases = initBiases;
         // creating each layer (except the input layer that already got created)
         for (int i = 1; i < numberOfNodesInEveryLayer.getSize() - 1; i++)
         {
-            this->_layers.push_back(neuralLayer<T>(numberOfNodesInEveryLayer[i], numberOfNodesInEveryLayer[i - 1]));
+            neuralLayer<T> newLayer(numberOfNodesInEveryLayer[i], numberOfNodesInEveryLayer[i - 1]);
+            this->_layers.push_back(newLayer);
         }
     }
 
@@ -46,7 +50,7 @@ public:
         vector<matrix<T>> trainingWeightColumn(this->_layers[this->_noLayers-1].getSize());
         vector<vector<T>> trainingBiasColumn(this->_layers[this->_noLayers-1].getSize());
         // treating the last layer specially
-        this->_layers[this->_noLayers-1].calculateDerivativeOfZValues(y, true);
+        this->_layers[this->_noLayers-1].calculateDerivativeOfZValues(Y, true);
         trainingWeightColumn.setAt(0, this->_layers[this->_noLayers-1].calculateDerivativeOfWeights(this->_layers[this->_noLayers-2].getNodes()));
         trainingBiasColumn.setAt(0, this->_layers[this->_noLayers-1].calculateDerivativeOfBiases);
         // backpropagate through remaining layers

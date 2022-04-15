@@ -6,7 +6,7 @@
 
 
 namespace neuralwork{
-template<typename T> // T may be one of the following: float, double
+template<typename T>
 struct vector {
 private:
     std::vector<T> _v;
@@ -19,6 +19,11 @@ private:
 
 public:
     // defining the constructor
+    vector() {
+        this->_size = 0;
+        this->_v = std::vector<T>({});
+    }
+
     vector(const T arr[], const int &length) {
         this->_size = length;
         this->_v = std::vector<T>(length);
@@ -34,7 +39,7 @@ public:
 
     vector(std::vector<T> &v) {
         this->_v = std::vector<T>(v);
-        this->_size = v.getSize();
+        this->_size = v.size();
     }
 
     vector(const int size, const T defaultValue = 0) {

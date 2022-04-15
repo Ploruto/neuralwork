@@ -1,5 +1,5 @@
-#ifndef JOPHO_MATRIX
-#define JOPHO_MATRIX
+#ifndef NEURALWORK_MATRIX
+#define NEURALWORK_MATRIX
 
 #include <neuralwork/datatypes/vector.hpp>
 //#include <vector>
@@ -19,6 +19,12 @@ struct matrix{
 
     public:
     // defining the constructor
+    matrix() {
+        this->_rows = 0;
+        this->_cols = 0;
+        this->_m = std::vector<vector<T>>({});
+    }
+
     matrix(const T arr[], const int &rows, const int &cols){
         this->_rows = rows;
         this->_cols = cols;
@@ -40,7 +46,7 @@ struct matrix{
         this->_cols = m[0].getSize();
     }
 
-    matrix(const int &rows, const int &cols){
+    matrix(int rows, int cols){
         this->_rows = rows;
         this->_cols = cols;
         this->_m = std::vector<vector<T>>(rows);
@@ -49,6 +55,7 @@ struct matrix{
             this->setRow(i, rowVector);
         }
     }
+
 
     // defining the getter
     std::vector<vector<T>> getMatrix() const{
@@ -75,7 +82,7 @@ struct matrix{
 
     // defining the operator overloading
     void operator=(matrix<T> &m){
-        this->_m = std::vector<vector<T>>(m.getMatrix());
+        //this->_m = std::vector<vector<T>>(m.getRows());
         this->_rows = m.getRows();
         this->_cols = m.getCols();
     }
