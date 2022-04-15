@@ -2,123 +2,69 @@
 #define NEURALWORK_VECTOR
 
 #include <vector>
-#include <iostream>
 
+namespace neuralwork {
+template <typename T>
+struct vector
+{
+    private:
+        std::vector<T> _vector;
 
-namespace neuralwork{
-template<typename T> // T may be one of the following: float, double
-struct vector {
-private:
-    std::vector<T> _v;
-    int _size;
-    void _equalSizeCheck(vector<T> &v) {
-        if (!this->isEqualSize(v)) {
-            throw std::invalid_argument("Vectors are of unequal size");
+    public:
+        vector(std::vector<T> vector)
+        {
+            this->_vector = vector;
         }
-    }
 
-public:
-    // defining the constructor
-    vector(const T arr[], const int &length) {
-        this->_size = length;
-        this->_v = std::vector<T>(length);
-        for (int i = 0; i < length; i++) {
-            this->_v[i] = arr[i];
+        vector(int size)
+        {
+            this->_vector = std::vector<T>(size);
         }
-    }
 
-    // vec(vec<T> &v){
-    //     this->_v = std::vector<T>(v.getVector());
-    //     this->_size = v.getSize();
-    // }
-
-    vector(std::vector<T> &v) {
-        this->_v = std::vector<T>(v);
-        this->_size = v.getSize();
-    }
-
-    vector(const int &size) {
-        this->_size = size;
-        this->_v = std::vector<T>(size);
-    }
-
-    // defining the getter
-    vector<T> getVec() const {
-        return this->_v;
-    }
-
-    int getSize() {
-        return this->_size;
-    }
-
-    // defining the setter
-    void setAt(const int &index, const T &value) {
-        this->_v[index] = value;
-    }
-
-    void setVector(vector<T> &v) {
-        this->_v = v;
-    }
-
-    // defining the operator overloading
-    void operator=(vector<T> &v) {
-        this->_v = std::vector<T>(v.getVector());
-        this->_size = v.getSize();
-    }
-
-    T operator[](const int &index) { // works only as a getter
-        return this->_v[index];
-    }
-
-    vector<T> operator+(vector<T> &v) { // adding two vectors
-        this->_equalSizeCheck(v);
-        vector<T> result(this->_size);
-        for (int i = 0; i < this->_size; i++) {
-            result.setAt(i, this->_v[i] + v[i]);
+        vector(int size, T value)
+        {
+            this->_vector = std::vector<T>(size, value);
         }
-        return result;
-    }
 
-    T operator*(vector<T> &v) { // dot product
-        this->_equalSizeCheck(v);
-        T sum = 0;
-        for (int i = 0; i < this->_size; i++) {
-            sum += v[i] * (*this)[i];
+        vector(int size, T *values)
+        {
+            this->_vector = std::vector<T>(values, values + size);
         }
-        return sum;
-    }
 
-    vector<T> operator*(const T &scalar) { // scalar multiplication
-        vector<T> result(this->_size);
-        for (int i = 0; i < this->_size; i++) {
-            result.setAt(i, this->_v[i] * scalar);
+        vector(const vector &vector)
+        {
+            this->_vector = vector._vector;
         }
-        return result;
-    }
 
-    // defining other methods
-    void push_back(T el) {
-        this->_v.push_back(el);
-        (this->_size)++;
-    }
-
-    void randomize() {
-        for (int i = 0; i < this->_size; i++) {
-            this->_v[i] = ((float) rand() / (RAND_MAX));
+        vector(vector &&vector)
+        {
+            this->_vector = vector._vector;
         }
-    }
 
-    bool isEqualSize(vector<T> &v) {
-        return this->_size == v.getSize();
-    }
-
-    void print() {
-        for (int i = 0; i < this->_size; i++) {
-            std::cout<<this->_v[i]<<" ";
+        vector &operator=(const vector &vector)
+        {
+            this->_vector = vector._vector;
+            return *this;
         }
-        std::cout<<std::endl;
-    }
+
+        vector &operator=(vector &&vector)
+        {
+            this->_vector = vector._vector;
+            return *this;
+        }
+
+        T &operator[](int index)
+        {
+            return this->_vector[index];
+        }
+
+        void setAt(int index, T value)
+        {
+            this->_vector[index] = value;
+        }
 };
 }
+
+
 
 #endif

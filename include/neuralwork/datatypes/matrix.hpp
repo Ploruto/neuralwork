@@ -1,154 +1,84 @@
-#ifndef JOPHO_MATRIX
-#define JOPHO_MATRIX
-
+#ifndef NEURALWORK_MATRIX
+#define NEURALWORK_MATRIX
 #include <neuralwork/datatypes/vector.hpp>
-//#include <vector>
 
 namespace neuralwork {
-template<typename T> // T may be one of the following: int, float, double, char, etc.
-struct matrix{
-    private:
-    std::vector<vector<T>> _m; // _m is a vector of vectors indexed by _m[row][column]
-    int _rows;
-    int _cols;
-    void _equalSizeCheck(matrix<T> &m){
-        if (!this->isEqualSize(m)){
-            throw std::invalid_argument("Matrices are of unequal size");
-        }
+template <typename T>
+struct matrix {
+private:
+    vector<vector<T>> _matrix = vector<vector<T>>(0, vector<T>(0));
+
+public:
+    // default constructor
+    matrix() {
+        this->_matrix = vector<vector<T>>();
     }
 
-    public:
-    // defining the constructor
-    matrix(const T arr[], const int &rows, const int &cols){
-        this->_rows = rows;
-        this->_cols = cols;
-        this->_m = std::vector<vector<T>>(rows);
-        for (int i = 0; i < rows; i++){
-            this->_m[i].setVector(vector<T>(arr + i * cols, cols));
-        }
+    // constructor with size of matrix (cols, rows)
+    matrix(int cols, int rows) {
+        this->_matrix = vector<vector<T>>(cols, vector<T>(rows));
     }
 
-    matrix(matrix<T> &m){
-        this->_m = std::vector<vector<T>>(m.getMatrix());
-        this->_rows = m.getRows();
-        this->_cols = m.getCols();
+    // constructor with size of matrix (cols, rows) and value
+    matrix(int cols, int rows, T value) {
+        this->_matrix = vector<vector<T>>(cols, vector<T>(rows, value));
     }
 
-    matrix(std::vector<vector<T>> &m){
-        this->_m = std::vector<vector<T>>(m);
-        this->_rows = m.size();
-        this->_cols = m[0].getSize();
+    // constructor with size of matrix (cols, rows) and values
+    matrix(int cols, int rows, T *values) {
+        this->_matrix = vector<vector<T>>(cols, vector<T>(rows, values));
     }
 
-    matrix(const int &rows, const int &cols){
-        this->_rows = rows;
-        this->_cols = cols;
-        this->_m = std::vector<vector<T>>(rows);
-        for (int i = 0; i < rows; i++){
-            this->_m.setRow(i, vector<T>(cols));
-        }
+    T &operator()(int col, int row) {
+        return this->_matrix[col][row];
     }
 
-    // defining the getter
-    std::vector<vector<T>> getMatrix() const{
-        return this->_m;
+    vector<T> &operator[](int index) {
+        return this->_matrix[index];
     }
 
-    int getRows(){
-        return this->_rows;
+    void set(int col, int row, T value) {
+        this->_matrix[col][row] = value;
     }
 
-    int getCols(){
-        return this->_cols;
+    void set_col(int col, vector<T> values) {
+        this->_matrix[col] = values;
     }
 
-    // defining the setter
-    void setAt(const int &row, const int &col, const T &value){
-        this->_m[row][col] = value;
-    }
-
-    void setRow(const int &row, vector<T> &v){
-        this->_m[row] = v;
+    // get size of matrix by multiplying the size of the outer and inner vector
+    int size() {
+        return this->_matrix.size() * this->_matrix[0].size();
     }
 
 
-    // defining the operator overloading
-    void operator=(matrix<T> &m){
-        this->_m = std::vector<vector<T>>(m.getMatrix());
-        this->_rows = m.getRows();
-        this->_cols = m.getCols();
-    }
-    
-    vector<T> operator[](const int &row){ // works only as a getter
-        return this->_m[row];
-    }
 
-    matrix<T> operator+(matrix<T> &m){ // adding two matrices
-        this->_equalSizeCheck(m);
-        matrix<T> result(this->_rows, this->_cols);
-        for (int i = 0; i < this->_rows; i++){
-            for (int j = 0; j < this->_cols; j++){
-                result.setAt(i, j, this->_m[i][j] + m(i, j));
-            }
-        }
-        return result;	
-    }
-
-    matrix<T> operator*(matrix<T> &m){ // multiplying two matrices
-        this->_equalSizeCheck(m);
-        matrix<T> result(this->_rows, m.getCols());
-        for (int i = 0; i < this->_rows; i++){
-            for (int j = 0; j < m.getCols(); j++){
-                result.setAt(i, j, this->_m[i][0] * m(0, j));
-                for (int k = 1; k < this->_cols; k++){
-                    result.setAt(i, j, result(i, j) + this->_m[i][k] * m(k, j));
-                }
+    // scalar multiplication
+    matrix<T> operator*(T scalar) {
+        matrix<T> result(this->_matrix.size(), this->_matrix[0].size());
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            for (int j = 0; j < this->_matrix[0].size(); j++) {
+                result[i][j] = this->_matrix[i][j] * scalar;
             }
         }
         return result;
     }
 
-    matrix<T> operator*(const T &value){ // multiplying a matrix by a scalar
-        matrix<T> result(this->_rows, this->_cols);
-        for (int i = 0; i < this->_rows; i++){
-            for (int j = 0; j < this->_cols; j++){
-                result.setAt(i, j, this->_m[i][j] * value);
+    // vector multiplication
+    vector<T> operator*(vector<T> inputVector) {
+        vector<T> result(this->_matrix.size());
+        for (int i = 0; i < this->_matrix.size(); i++) {
+            result[i] = 0;
+            for (int j = 0; j < this->_matrix[0].size(); j++) {
+                result[i] += this->_matrix[i][j] * inputVector[j];
             }
         }
         return result;
     }
 
-    //defining other methods
-    void randomize() {
-        for (int i = 0; i < this->_rows; i++) {
-            this->_m[i].randomize();
-        }
-    }
 
-    bool isEqualSize(matrix<T> &m){
-        return (this->_rows == m.getRows() && this->_cols == m.getCols());
-    }
 
-    void print(){
-        for (int i = 0; i < this->_rows; i++){
-            for (int j = 0; j < this->_cols; j++){
-                std::cout<<this->_m[i][j]<<" ";
-            }
-            std::cout<<std::endl;
-        }
-    }
+};
 
-    // void printToFile(const char *filename){
-    //     std::ofstream file(filename);
-    //     for (int i = 0; i < this->_rows; i++){
-    //         for (int j = 0; j < this->_cols; j++){
-    //             file<<this->_m[i][j]<<" ";
-    //         }
-    //         file<<std::endl;
-    //     }
-    //     file.close();
-    // }
-};   
 }
 
 #endif
