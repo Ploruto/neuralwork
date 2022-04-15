@@ -44,8 +44,9 @@ struct matrix{
         this->_rows = rows;
         this->_cols = cols;
         this->_m = std::vector<vector<T>>(rows);
+        vector<T> rowVector(cols);
         for (int i = 0; i < rows; i++){
-            this->_m.setRow(i, vector<T>(cols));
+            this->setRow(i, rowVector);
         }
     }
 
@@ -67,8 +68,8 @@ struct matrix{
         this->_m[row][col] = value;
     }
 
-    void setRow(const int &row, vector<T> &v){
-        this->_m[row] = v;
+    void setRow(const int row, vector<T> &v){
+        this->_m[row].setVector(v);
     }
 
 
@@ -77,6 +78,13 @@ struct matrix{
         this->_m = std::vector<vector<T>>(m.getMatrix());
         this->_rows = m.getRows();
         this->_cols = m.getCols();
+    }
+
+    void operator=(const T constantValue) {
+        vector<T> constantVector(this->_cols, constantValue);
+        for (int i = 0; i < this->_rows; i++) {
+            this->_m[i].setVector(constantVector);
+        }
     }
     
     vector<T> operator[](const int &row){ // works only as a getter
@@ -118,7 +126,18 @@ struct matrix{
         return result;
     }
 
-    //defining other methods
+    // defining other methods
+    void push_back_column(vector<T> &column) {
+        matrix<T> temp(column.getSize(), this->_cols);
+        this->_equalSizeCheck(temp);
+        (this->_cols)++;
+        for (int i = 0; i < this->_rows; i++) {
+            vector<T> rowVector(this->_m[i].getVector());
+            rowVector.push_back(column[i]);
+            this->_m.setRow(i, rowVector);
+        }
+    }
+
     void randomize() {
         for (int i = 0; i < this->_rows; i++) {
             this->_m[i].randomize();

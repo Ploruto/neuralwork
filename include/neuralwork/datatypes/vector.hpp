@@ -37,13 +37,13 @@ public:
         this->_size = v.getSize();
     }
 
-    vector(const int &size) {
+    vector(const int size, const T defaultValue = 0) {
         this->_size = size;
-        this->_v = std::vector<T>(size);
+        this->_v = std::vector<T>(size, defaultValue);
     }
 
     // defining the getter
-    vector<T> getVec() const {
+    std::vector<T> getVector() const {
         return this->_v;
     }
 
@@ -52,12 +52,13 @@ public:
     }
 
     // defining the setter
-    void setAt(const int &index, const T &value) {
+    void setAt(const int &index, const T value) {
         this->_v[index] = value;
     }
 
     void setVector(vector<T> &v) {
-        this->_v = v;
+        this->_v = std::vector<T>(v.getVector());
+        this->_size = v.getSize();
     }
 
     // defining the operator overloading

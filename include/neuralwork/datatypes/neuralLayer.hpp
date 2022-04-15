@@ -74,7 +74,7 @@ public:
         return this->_nodes;
     }
 
-    vector<T> getBias() const {
+    vector<T> getBiases() const {
         return this->_bias;
     }
 
@@ -84,6 +84,10 @@ public:
 
     vector<T> getderivativeofZValues() const {
         return this->_derivativeofZValues;
+    }
+
+    int getSize() {
+        return this->_nodes.getSize();
     }
 
     // defining the setter
@@ -104,8 +108,8 @@ public:
     }
 
     // defining other methods
-    void calculateNodes(vector<T> &input) {
-        this->_nodes = sigmoidOfVector(this->_weights * input + this->_bias);
+    void calculateNodes(vector<T> &previousNodes) {
+        this->_nodes = sigmoidOfVector(this->_weights * previousNodes + this->_bias);
     }
 
     void calculateDerivativeOfZValues(vector<T> &input = nullptr, bool isLastLayer = false) {
